@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from 'redux/store';
+import { addContact } from 'redux/operations';
 import { getContacts } from 'redux/selectors';
-
-import { nanoid } from 'nanoid';
 
 import { FormTag, Lable, Input, Button } from './Form.styled';
 
@@ -15,12 +13,12 @@ const Form = () => {
   const dispatch = useDispatch();
   const contactsRedux = useSelector(getContacts);
 
-  const addNewContact = (id, name, number) => {
+  const addNewContact = (name, number) => {
     const isContactExist = contactsRedux.some(
       contact => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase()
     );
     if (!isContactExist) {
-      dispatch(addContact({ id, name, number }));
+      dispatch(addContact({ name, phone:number }));
        setName('');
        setNumber('');
     } else {
@@ -49,8 +47,7 @@ const Form = () => {
       );
       return;
     }
-    const id = nanoid();
-    addNewContact(id, name, number);
+    addNewContact(name, number);
   };
 
   const onInputChange = e => {

@@ -35,7 +35,9 @@ export const addContactSlice = createSlice({
     [addContact.pending]: handlePending,
     [addContact.fulfilled]: (state, action) => {
       state.items.unshift(action.payload)
-    }
+      state.isLoading = false;
+    },
+    [addContact.rejected]: handleRejected,
   },
 });
 

@@ -2,28 +2,28 @@ import React, { useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { useSelector, useDispatch } from 'react-redux';
 import { addContact } from 'redux/operations';
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 
 import { FormTag, Lable, Input, Button } from './Form.styled';
 
 const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  
+
   const dispatch = useDispatch();
-  const contactsRedux = useSelector(getContacts);
+  const contactsRedux = useSelector(selectContacts);
 
   const addNewContact = (name, number) => {
     const isContactExist = contactsRedux.some(
       contact => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase()
     );
     if (!isContactExist) {
-      dispatch(addContact({ name, phone:number }));
-       setName('');
-       setNumber('');
+      dispatch(addContact({ name, phone: number }));
+      setName('');
+      setNumber('');
     } else {
       Notify.warning('Sorry, but this NAME has already exist!');
-      return 
+      return;
     }
   };
 

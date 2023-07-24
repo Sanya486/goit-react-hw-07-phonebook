@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getContacts, getFilter } from 'redux/selectors';
-import { deleteContact as deleteContactRedux, fetchContacts } from 'redux/operations';
+import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
+import {
+  deleteContact as deleteContactRedux,
+  fetchContacts,
+} from 'redux/operations';
 import { Button, Li } from './Contact.styled';
 
 const Contact = () => {
   const dispatch = useDispatch();
-  const contactsRedux = useSelector(getContacts);
-  const filterRedux = useSelector(getFilter);
+  const contactsRedux = useSelector(selectContacts);
+  const filterRedux = useSelector(selectFilter);
+  const isLoading = useSelector(selectIsLoading)
   const contacts = filterRedux === '' ? contactsRedux : onActiveFilter();
 
   useEffect(() => {
     dispatch(fetchContacts());
-  }, [dispatch])
+  }, [dispatch]);
   const deleteContact = id => {
     dispatch(deleteContactRedux(id));
   };
@@ -31,11 +35,12 @@ const Contact = () => {
           <p>
             {name}: {phone}
           </p>
-          <Button type="button" onClick={() => deleteContact(id)}>
+          <Button type="button" disabled={isLoading} onClick={() => deleteContact(id)}>
             Delete
           </Button>
         </Li>
       ))}
+      
     </>
   );
 };

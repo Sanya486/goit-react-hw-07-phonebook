@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { getFilter } from 'redux/selectors';
+import { selectFilter } from 'redux/selectors';
 import { filter } from 'redux/store';
 
 import { Lable, Input } from './Filter.styled';
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const filterRedux = useSelector(getFilter);
+  const filterRedux = useSelector(selectFilter);
 
   const onFilterChange = e => {
     const value = e.target.value.toLowerCase();

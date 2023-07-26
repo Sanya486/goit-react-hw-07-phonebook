@@ -1,47 +1,40 @@
-import React, { useEffect } from 'react';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
-import {
-  deleteContact as deleteContactRedux,
-  fetchContacts,
-} from 'redux/operations';
+import React from 'react';
+import { useState } from 'react';
 import { Button, Li } from './Contact.styled';
+import { useDispatch } from 'react-redux';
+import { deleteContact as deleteContactRedux } from 'redux/operations';
+import { RotatingLines } from 'react-loader-spinner';
 
-const Contact = () => {
+const Contact = ({ contact }) => {
+  const [isLoaderShow, setIsLoaderShow] = useState(false);
   const dispatch = useDispatch();
-  const contactsRedux = useSelector(selectContacts);
-  const filterRedux = useSelector(selectFilter);
-  const isLoading = useSelector(selectIsLoading)
-  const contacts = filterRedux === '' ? contactsRedux : onActiveFilter();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  const handleClick = e => {
+    e.target.disabled = true;
+    setIsLoaderShow(true);
+    deleteContact(contact.id);
+  };
   const deleteContact = id => {
     dispatch(deleteContactRedux(id));
   };
-
-  function onActiveFilter() {
-    return contactsRedux.filter(contact =>
-      contact.name.toLowerCase().includes(filterRedux)
-    );
-  }
-
   return (
-    <>
-      {contacts.map(({ id, name, phone }) => (
-        <Li key={id}>
-          <p>
-            {name}: {phone}
-          </p>
-          <Button type="button" disabled={isLoading} onClick={() => deleteContact(id)}>
-            Delete
-          </Button>
-        </Li>
-      ))}
-      
-    </>
+    <Li>
+      <p>
+        {contact.name}: {contact.phone}
+      </p>
+      <Button key={contact.id} type="button" onClick={handleClick}>
+        {isLoaderShow && (
+          <RotatingLines
+            strokeColor="grey"
+            strokeWidth="5"
+            animationDuration="0.75"
+                      width="15
+            "
+            visible={true}
+          />
+        )}
+        Delete
+      </Button>
+    </Li>
   );
 };
 

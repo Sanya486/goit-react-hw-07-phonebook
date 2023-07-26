@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Loading, Notify } from 'notiflix';
+import { Loading } from 'notiflix';
+import { toast } from 'react-hot-toast';
 
 axios.defaults.baseURL = 'https://64beb5f65ee688b6250cd534.mockapi.io/api';
 
@@ -23,18 +24,15 @@ export const addContact = createAsyncThunk(
   'contacts/addContact',
   async (contact, thunkAPI) => {
     try {
-      Loading.pulse();
-      const response = await axios.post('/contacts', contact);
-      Loading.remove();
-      Notify.success(`${response.data.name} has added`, {
-        position: 'center-top',
+      const toastPromise = axios.post('/contacts', contact);
+      const response = await toastPromise;
+      toast.promise(toastPromise, {
+        loading: 'Loading',
+        success: `${response.data.name} added successfully`,
+        error: `Something went wrong. Please try more later!`,
       });
       return response.data;
     } catch (e) {
-      Loading.remove();
-      Notify.failure(`Oops, something went wrong. Next time will be better`, {
-        position: 'center-top',
-      });
       return thunkAPI.rejectWithValue(e.message);
     }
   }
@@ -44,18 +42,15 @@ export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
   async (id, thunkAPI) => {
     try {
-      Loading.pulse();
-      const response = await axios.delete(`/contacts/${id}`);
-      Loading.remove();
-      Notify.success(`${response.data.name} was removed.❌ `, {
-        position: 'center-top',
+      const toastPromise = axios.delete(`/contacts/${id}`);
+      const response = await toastPromise;
+      toast.promise(toastPromise, {
+        loading: 'Loading',
+        success: `${response.data.name} was removed.❌`,
+        error: `Something went wrong. Please try more later!`,
       });
       return response.data;
     } catch (e) {
-      Loading.remove();
-      Notify.failure(`Oops, something went wrong. Next time will be better`, {
-        position: 'center-top',
-      });
       return thunkAPI.rejectWithValue(e.message);
     }
   }

@@ -88,6 +88,7 @@ const Form = () => {
         />
       </Lable>
       <Button type="submit">Add contact</Button>
+      
     </FormTag>
   );
 };
